@@ -5,7 +5,7 @@
     var cajasAsignadas = BL.CajadiarioBL.Listar(x => x.IndAbierto && !x.caja.IndBoveda, includeProperties: "caja,persona");
 }
 <main class="row">
-    <div class="col s12 m12 l12">        
+    <div class="col s12 m12 l12">
         <div class="card-panel row">
             <form id="formValidate" class="validar" method="post" action=''>
                 <table class="striped">
@@ -20,20 +20,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                            <tr>
-                                <td>@(boveda.IndAbierto ? "Abierto" : "Cerrado")</td>                                
-                                <td>{{boveda.FechaInicio}} </td>
-                                <td>{{boveda.Entradas}}</td>
-                                <td>{{boveda.Salidas}}</td>
-                                <td>{{boveda.SaldoFinal}}</td>
-                                <td>
-                                    <a class="btn teal tooltipped waves-effect waves-light" data-position="left" data-tooltip="Ver Movimientos"><i class="mdi-action-description"></i></a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>@(boveda.IndAbierto ? "Abierto" : "Cerrado")</td>
+                            <td>{{boveda.FechaInicio | moment}} </td>
+                            <td>{{boveda.Entradas}}</td>
+                            <td>{{boveda.Salidas}}</td>
+                            <td>{{boveda.SaldoFinal}}</td>
+                            <td>
+                                <a class="btn teal tooltipped waves-effect waves-light" data-position="left" data-tooltip="Ver Movimientos"><i class="mdi-action-description"></i></a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <pre>
-    {{$data}}
+    @*{{$data}}*@
 </pre>
 
                 <div class="row">
@@ -53,19 +53,19 @@
                         <a class="btn dropdown-button waves-effect waves-light  blue" href="#!" data-activates="dropdown2">Reporte<i class="mdi-navigation-arrow-drop-down right"></i></a>
 
                         <ul id="dropdown1" class="dropdown-content">
-                            <li>
-                                <a href="#!" class="-text">Ingreso a boveda</a>
+                            <li onclick="Transferir(true)">
+                                <a class="-text">Ingreso a boveda</a>
                             </li>
                             <li>
                                 <a href="#!" class="-text">Tranferencia a Caja</a>
                             </li>
-                            <li>
+                            <li  onclick="Transferir(false)">
                                 <a href="#!" class="-text">Tranferencia a Banco</a>
                             </li>
                         </ul>
                         <a class="btn dropdown-button waves-effect waves-light right blue" href="#!" data-activates="dropdown1">Movimientos<i class="mdi-navigation-arrow-drop-down right"></i></a>
 
-                        
+
                     </div>
                 </div>
             </form>
@@ -242,7 +242,7 @@
         }
 
         function nuevaCaja() {
-            fn.prompt("Nueva Caja","text", "", function (valor) {
+            fn.prompt("Nueva Caja", "text", "", function (valor) {
                 $.post('@Url.Action("GuardarCaja", "Cajadiario")', { cajaId: 0, nombre: valor }, function (d) {
                     window.location.reload(true);
                 });
@@ -256,6 +256,41 @@
             });
         }
 
+        function Transferir(entrada) {
+            t = entrada?"Ingreso a Boveda":"Transferencia a Banco"
+            swal({
+                title: t,
+                html:
+                  '<input type="number" id="swal-input1" class="swal2-input" placeholder="Monto">' +
+                  '<textarea id="swal-input2" class="swal2-textarea" placeholder="Ingrese Motivo">',
+                preConfirm: function () {
+                    return new Promise(function (resolve, reject) {
+                        var txt1 = $('#swal-input1');
+                        var txt2 = $('#swal-input2');
+
+                        if (txt1.val() == "" || parseInt(txt1.val()) <= 0) {
+                            txt1.focus();
+                            reject('Tu necesitas ingresar Monto mayor a 0');
+                        } else if (txt2.val() == "") {
+                            txt2.focus();
+                            reject('Tu necesitas ingresar el motivo.');
+                        } else {
+                            resolve([
+                                      txt1.val(),
+                                      txt2.val()
+                            ])
+                        }
+                    })
+                },
+                onOpen: function () {
+                    $('#swal-input1').focus()
+                }
+            }).then(function (result) {
+                vm.Transferir(result, entrada);
+                //swal(JSON.stringify(result))
+            }).catch(swal.noop)
+        }
+
         var vm = new Vue({
             el: 'main',
             data: {
@@ -267,12 +302,25 @@
                     self.boveda = d;
                 });
             },
-            computed: {
-                reversedMessage: function () {
-                    return this.message.split('').reverse().join('')
+            filters: {
+                moment: function (date) {
+                    return moment(date).format('DD/MM/YYYY h:mm:ss a');
+                }
+            },
+            methods: {
+                Transferir: function (result, indEntrada) {
+                    var self = this;
+                    $.post('@Url.Action("TranferenciaBovedaBanco", "Cajadiario")', { monto: result[0], indEntrada: indEntrada }, function (d) {
+                        self.boveda = d;
+                        fn.mensaje("La tranferencia se realizo con éxito");
+                    }); 
                 }
             }
-        })
+
+        });
+
+
+
 
     </script>
 }      

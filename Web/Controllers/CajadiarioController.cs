@@ -101,14 +101,16 @@ namespace Web.Controllers
             return Json(CajadiarioBL.CrearSaldoInicial(cajaDiarioId, saldoInicial));
         }
         [HttpPost]
-        public JsonResult TranferenciaBancoBoveda(decimal monto, bool indEntrada)
+        public JsonResult TranferenciaBovedaBanco(decimal monto, bool indEntrada)
         {
-            return Json(CajadiarioBL.TranferenciaBancoBoveda(monto, indEntrada));
+            var c = CajadiarioBL.TranferenciaBovedaBanco(monto, indEntrada);
+            return Json(c);
         }
 
         public JsonResult ObtenerBoveda() {
             return Json(BL.ComunBL.GetBoveda(),JsonRequestBehavior.AllowGet);
             //return Json(BL.CajadiarioBL.Obtener(1), JsonRequestBehavior.AllowGet);
         }
+       
     }
 }

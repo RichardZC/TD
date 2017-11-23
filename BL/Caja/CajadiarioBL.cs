@@ -143,7 +143,7 @@ namespace BL
         }
 
 
-        public static bool TranferenciaBancoBoveda(decimal monto,bool indEntrada)
+        public static cajadiario TranferenciaBovedaBanco(decimal monto,bool indEntrada)
         {
             var b = ComunBL.GetBoveda();
             using (var scope = new TransactionScope())
@@ -156,16 +156,14 @@ namespace BL
                         PersonaId = ComunBL.GetPersonaIdSesion(),
                         Monto = monto,
                         Operacion = "TRA",
-                        Glosa = "TRANS. A BANCO",
+                        Glosa = indEntrada?"TRANS. A BOVEDA": "TRANS. A BANCO",
                         IndEntrada = indEntrada,
                         Estado = "T",
                         UsuarioRegId = Comun.SessionHelper.GetUser(),
                         FechaReg = DateTime.Now
                     });
                     ActualizarSaldoCajaDiario(b.CajaDiarioId);
-
-                    scope.Complete();
-                    return true;
+                    scope.Complete();                   
                 }
                 catch (Exception ex)
                 {
@@ -173,6 +171,7 @@ namespace BL
                     throw new Exception(ex.Message);
                 }
             }
+            return BL.ComunBL.GetBoveda();
         }
 
     }
