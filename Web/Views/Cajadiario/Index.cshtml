@@ -27,7 +27,7 @@
                             <td>{{boveda.Salidas}}</td>
                             <td>{{boveda.SaldoFinal}}</td>
                             <td>
-                                <a class="btn teal tooltipped waves-effect waves-light" data-position="left" data-tooltip="Ver Movimientos"><i class="mdi-action-description"></i></a>
+                                <a class="btn teal tooltipped waves-effect waves-light modal-trigger" href="#modalMovs" data-position="left" data-tooltip="Ver Movimientos"><i class="mdi-action-description"></i></a>
                             </td>
                         </tr>
                     </tbody>
@@ -56,11 +56,11 @@
                             <li onclick="Transferir(true)">
                                 <a class="-text">Ingreso a boveda</a>
                             </li>
-                            <li>
-                                <a href="#!" class="-text">Tranferencia a Caja</a>
+                            <li onclick="TransferirCaja(false)">
+                                <a class="-text">Tranferencia a Caja</a>
                             </li>
                             <li  onclick="Transferir(false)">
-                                <a href="#!" class="-text">Tranferencia a Banco</a>
+                                <a class="-text">Tranferencia a Banco</a>
                             </li>
                         </ul>
                         <a class="btn dropdown-button waves-effect waves-light right blue" href="#!" data-activates="dropdown1">Movimientos<i class="mdi-navigation-arrow-drop-down right"></i></a>
@@ -70,7 +70,22 @@
                 </div>
             </form>
         </div>
+    </div>     
+
+    <div id="modalMovs" class="modal">
+        <div class="modal-content">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn waves-effect waves-green btn-flat modal-action modal-close">Cerrar</a>
+        </div>
     </div>
+
+    
+
 </main>
 
 <div class="row">
@@ -163,17 +178,13 @@
                 <div class="nav-wrapper">
                     <div class="left col s12 m5 l5">
                         <ul>
-                            <li>
-                                <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-navigation-close"></i></a>
-                            </li>
+                            <li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-navigation-close"></i></a></li>
                             <li><span id="tituloCaja"></span></li>
                         </ul>
                     </div>
                     <div class="col s12 m7 l7">
                         <ul class="right">
-                            <li>
-                                <button type="submit" data-ajax="true" class="btn btn-large btn-flat red white-text " style="vertical-align:baseline;height:auto;"><i class="modal-action mdi-content-save"></i></button>
-                            </li>
+                            <li><button type="submit" data-ajax="true" class="btn btn-large btn-flat red white-text " style="vertical-align:baseline;height:auto;"><i class="modal-action mdi-content-save"></i></button></li>
                         </ul>
                     </div>
                 </div>
@@ -193,10 +204,8 @@
                 </div>
                 <div id="mostrarSaldo" class="input-field col s12 m8 l6">
                     <i class="mdi-editor-attach-money prefix"></i>
-                    <label for="txtSaldoInicial" class="" data-error="Ingrese monto correcto">Monto Inicial</label>
-
-                    <input id="txtSaldoInicial" name="SaldoInicial" type="number" data-error=".errorTxt1" class="required number">
-                    <div class="errorTxt1"></div>
+                    <label for="txtSaldoInicial">Monto Inicial</label>
+                    <input id="txtSaldoInicial" name="SaldoInicial" type="number" class="required number">
                 </div>
             </div>
         </div>
@@ -225,7 +234,7 @@
                 if (r > 0) {
                     fn.resetForm();
                     $.get('@Url.Action("ObtenerSaldoBoveda", "Cajadiario")', function (d) {
-                        $("#mensajeBoveda").text('En la bóveda hay un saldo de S/. ' + d);
+                        $("#mensajeBoveda").text('Saldo bóveda S/. ' + d);
                         $("#txtSaldoInicial").prop('max', d);
                     });
                     fn.CargarCombo("@Url.Action("ComboUsuariosCajaAsignar", "CajaDiario")", "drpUsuario");
@@ -275,10 +284,7 @@
                             txt2.focus();
                             reject('Tu necesitas ingresar el motivo.');
                         } else {
-                            resolve([
-                                      txt1.val(),
-                                      txt2.val()
-                            ])
+                            resolve([txt1.val(),txt2.val()])
                         }
                     })
                 },

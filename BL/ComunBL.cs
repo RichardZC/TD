@@ -44,6 +44,7 @@ namespace BL
                     .FirstOrDefault(x => x.PersonaId == personaid && x.IndAbierto && x.caja.IndBoveda == false && x.caja.IndAbierto);
             }
         }
+       
         public static int GetBovedaCajaDiarioId()
         {
             using (var bd = new nacEntities())

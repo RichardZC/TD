@@ -15,7 +15,7 @@
                         <label for="autocompletar">Buscar Persona</label>
                     </div>
                     <div class="input-field col s12 m5 l4">
-                        <button onclick="crearUsuario()" class="btn waves-effect waves-light left" type="submit" name="action" id="btnCrearUsuario" disabled>
+                        <button onclick="crearUsuario(); return false;" class="btn waves-effect waves-light left" type="submit" name="action" id="btnCrearUsuario" disabled>
                             Crear usuario
                             <i class="mdi-action-done right"></i>
 
@@ -128,14 +128,9 @@
             window.location = '@Url.Action("Mantener", "Usuario")' + '/' + id;
         }
 
-        function crearUsuario() {
-            //alert($("#PersonaId").val());
-            var PersonaId = $("#PersonaId").val();
-
-
+        function crearUsuario() {            
+            var PersonaId = $("#txtPersonaId").val();
             window.location = '@Url.Action("Mantener", "Usuario")' + '?id=0&pPersonaId=' + PersonaId;
-           
-            
         }
 
     </script>
