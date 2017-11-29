@@ -111,6 +111,27 @@ namespace Web.Controllers
             return Json(BL.ComunBL.GetBoveda(),JsonRequestBehavior.AllowGet);
             //return Json(BL.CajadiarioBL.Obtener(1), JsonRequestBehavior.AllowGet);
         }
-       
+        public JsonResult ListarMovimientos(int id)
+        {
+            return Json(BL.CajaMovBL.Listar(x=>x.CajaDiarioId==id,includeProperties:"persona").Select(x=> new Movimientos {
+                CajaMovId=x.CajaMovId,
+                FechaReg = x.FechaReg,
+                NombrePersona = x.persona.NombreCompleto,
+                Operacion = x.Operacion,
+                Glosa = x.Glosa,
+                Ingreso = x.IndEntrada? x.Monto.ToString(): "",
+                Egreso = x.IndEntrada ? "":x.Monto.ToString(),
+                Estado = x.Estado
+            })
+                , JsonRequestBehavior.AllowGet);
+            //return Json(BL.CajadiarioBL.Obtener(1), JsonRequestBehavior.AllowGet);
+        }
+
+    }
+
+    public class Movimientos : cajamov {
+        public string NombrePersona { get; set; }
+        public string Ingreso { get; set; }
+        public string Egreso { get; set; }
     }
 }
