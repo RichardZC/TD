@@ -7,6 +7,8 @@
 <main class="row">
     <div class="col s12 m12 l12">
         <div class="card-panel row">
+            <demo></demo>
+
             <form id="formValidate" class="validar" method="post" action=''>
                 <table class="striped">
                     <thead>
@@ -28,10 +30,13 @@
                             <td>{{boveda.SaldoFinal}}</td>
                             <td>
                                 <a v-on:click="AbrirModalMovs(boveda.CajaDiarioId,'Boveda')" class="btn teal tooltipped waves-effect waves-light" data-position="left" data-tooltip="Ver Movimientos"><i class="mdi-action-description"></i></a>
+                                
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                
+
                 <pre>
     @*{{$data}}*@
 </pre>
@@ -72,39 +77,47 @@
         </div>
     </div>
 
-    <div id="modalMovs" class="modal">
+    <div id="modalMovs" class="modal modal-fixed-footer">
         <div class="modal-content">
-            <h5>{{tituloModalMov}}</h5>           
-            <table class="striped">
+             <table class="striped hoverable bordered">
                 <thead>
+                    <tr>
+                        <th colspan="6" class="center">{{tituloModalMov}}</th>                        
+                    </tr> 
                     <tr>
                         <th>Nro</th>
                         <th>Fecha</th>
-                        <th>Persona</th>
-                        <th>Operacion</th>
+                        <th>Persona</th>                        
                         <th>Descripcion</th>
                         <th>Ingreso</th>
                         <th>Egreso</th>
-                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody>                    
                         <tr v-for="i in movimientos">
                             <td>{{i.CajaMovId}}</td>
                             <td>{{i.FechaReg | formato}}</td>
-                            <td>{{i.NombrePersona}} </td>
-                            <td>{{i.Operacion}} </td>
+                            <td>{{i.NombrePersona}} </td>                            
                             <td>{{i.Glosa}} </td>
-                            <td>                                
-                                {{i.Ingreso}}
-                            </td>
-                            <td>                                
-                                {{i.Egreso}}
-                            </td>
-                            <td>
-                                {{i.Estado}}
-                            </td>
+                            <td>{{i.Ingreso}}</td>
+                            <td>{{i.Egreso}}</td>
                         </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="border-top:1px solid black; text-align:right">TOTALES S/. </td>
+                        <td style="border-top:1px solid black">{{totalIngreso | Numero }}</td>
+                        <td style="border-top:1px solid black">{{totalEgreso | Numero }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="border-top:1px solid black; text-align:right">NETO S/.</td>
+                        <td style="border-top:1px solid black">{{totalIngreso - totalEgreso | Numero }}</td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -244,18 +257,12 @@
             <i class="mdi-content-add-box"></i>
         </a>
     </div>
+
+    
 </main>
 
 @section scripts{
     <script>
-        $(function () {
-            //$('#modalMovs').leanModal({
-            //    ready: function () {
-            //        alert(123);
-            //    }
-            //});
-        });
-
         function Mostrar(cajaId, CajaName) {
             $.get('@Url.Action("ContarUsuariosCajaAsignar", "Cajadiario")', function (r) {
                 if (r > 0) {
@@ -324,6 +331,10 @@
             }).catch(swal.noop)
         }
 
+        Vue.component('demo', {
+            template:"<p>Hola Mundo</p>"
+        });
+
         var vm = new Vue({
             el: 'main',
             data: {
@@ -340,6 +351,9 @@
             filters: {
                 formato: function (date) {
                     return moment(date).format('DD/MM/YYYY h:mm:ss a');
+                },
+                Numero: function (n) {
+                    return n.toFixed(2);
                 }
             },
             methods: {
@@ -359,6 +373,18 @@
                         self.boveda = d;
                         fn.mensaje("La tranferencia se realizo con éxito");
                     }); 
+                }
+            },
+            computed: {
+                totalIngreso: function () {
+                    return this.movimientos.reduce(function (sum, mov) {
+                        return sum + Number(mov.Ingreso);
+                    }, 0);
+                },
+                totalEgreso: function () {
+                    return this.movimientos.reduce(function (sum, mov) {
+                        return sum + Number(mov.Egreso);
+                    }, 0);
                 }
             }
 

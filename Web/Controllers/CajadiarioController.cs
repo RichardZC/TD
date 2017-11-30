@@ -113,18 +113,15 @@ namespace Web.Controllers
         }
         public JsonResult ListarMovimientos(int id)
         {
-            return Json(BL.CajaMovBL.Listar(x=>x.CajaDiarioId==id,includeProperties:"persona").Select(x=> new Movimientos {
+            return Json(BL.CajaMovBL.Listar(x=>x.CajaDiarioId==id && x.Estado==Estado.CajaDiario.Terminado,includeProperties:"persona").Select(x=> new Movimientos {
                 CajaMovId=x.CajaMovId,
                 FechaReg = x.FechaReg,
-                NombrePersona = x.persona.NombreCompleto,
-                Operacion = x.Operacion,
+                NombrePersona = x.persona.NombreCompleto,                
                 Glosa = x.Glosa,
                 Ingreso = x.IndEntrada? x.Monto.ToString(): "",
-                Egreso = x.IndEntrada ? "":x.Monto.ToString(),
-                Estado = x.Estado
+                Egreso = x.IndEntrada ? "":x.Monto.ToString()
             })
                 , JsonRequestBehavior.AllowGet);
-            //return Json(BL.CajadiarioBL.Obtener(1), JsonRequestBehavior.AllowGet);
         }
 
     }

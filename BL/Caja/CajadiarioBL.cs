@@ -41,7 +41,7 @@ namespace BL
                     if (SaldoInicial > 0)
                     {
                         var bovedaId = ComunBL.GetBovedaCajaDiarioId();
-                        Transferir(bovedaId, cd.CajaDiarioId, cd.SaldoInicial, Global.Operacion.INI);
+                        Transferir(bovedaId, cd.CajaDiarioId, cd.SaldoInicial, Estado.Operacion.INI);
                     }
 
                     scope.Complete();
@@ -71,10 +71,10 @@ namespace BL
                             CajaDiarioId = pCajaDiarioOrigenId,
                             PersonaId = ComunBL.GetPersonaIdSesion(),
                             Monto = pImporte,
-                            Operacion = Global.Operacion.TRA,
+                            Operacion = Estado.Operacion.TRA,
                             Glosa = "TRANS. " + pCajaDiarioOrigen.caja.Denominacion + " A " + pCajaDiarioDestino.caja.Denominacion,
                             IndEntrada = false,
-                            Estado = Global.EstadoCajaDiario.Terminado,
+                            Estado = Estado.CajaDiario.Terminado,
                             UsuarioRegId = Comun.SessionHelper.GetUser(),
                             FechaReg = DateTime.Now,
                             CajaDiarioTransId = pCajaDiarioDestinoId
@@ -87,7 +87,7 @@ namespace BL
                             Operacion = Operacion,
                             Glosa = "TRANS. " + pCajaDiarioOrigen.caja.Denominacion + " A " + pCajaDiarioDestino.caja.Denominacion,
                             IndEntrada = true,
-                            Estado = Global.EstadoCajaDiario.Terminado,
+                            Estado = Estado.CajaDiario.Terminado,
                             UsuarioRegId = Comun.SessionHelper.GetUser(),
                             FechaReg = DateTime.Now,
                             CajaDiarioTransId = pCajaDiarioOrigenId
@@ -179,10 +179,10 @@ namespace BL
                         CajaDiarioId = b.CajaDiarioId,
                         PersonaId = ComunBL.GetPersonaIdSesion(),
                         Monto = monto,
-                        Operacion = Global.Operacion.TRA,
+                        Operacion = Estado.Operacion.TRA,
                         Glosa = indEntrada?"TRANS. A BOVEDA": "TRANS. A BANCO",
                         IndEntrada = indEntrada,
-                        Estado = Global.EstadoCajaDiario.Terminado,
+                        Estado = Estado.CajaDiario.Terminado,
                         UsuarioRegId = Comun.SessionHelper.GetUser(),
                         FechaReg = DateTime.Now
                     });

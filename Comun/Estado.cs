@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-    public class Global
+    public class Estado
     {
         public static class Operacion{
             public static string INI = "INI";
             public static string TRA = "TRA";
         }
-        public static class EstadoCajaDiario
+        public static class CajaDiario
         {
             public static string Pendiente = "P";
             public static string Cobrado = "C";
