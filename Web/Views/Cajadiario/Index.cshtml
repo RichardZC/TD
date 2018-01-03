@@ -7,8 +7,7 @@
 <main class="row">
     <div class="col s12 m12 l12">
         <div class="card-panel row">
-            <demo></demo>
-
+            
             <form id="formValidate" class="validar" method="post" action=''>
                 <table class="striped">
                     <thead>
@@ -61,7 +60,7 @@
                             <li onclick="Transferir(true)">
                                 <a class="-text">Ingreso a boveda</a>
                             </li>
-                            <li onclick="TransferirCaja(false)">
+                            <li v-on:click="AbrirTransferirCaja()">
                                 <a class="-text">Tranferencia a Caja</a>
                             </li>
                             <li onclick="Transferir(false)">
@@ -126,6 +125,15 @@
             <a href="#" class="btn waves-effect waves-green btn-flat modal-action modal-close">Cerrar</a>
         </div>
     </div>
+    <tranferir-caja origen="10" destino="999"></tranferir-caja>
+    @*<div id="modalTransferenciaCaja" class="modal">
+        <div class="modal-content">            
+            <tranferir-caja></tranferir-caja>
+         </div>
+        <div class="modal-footer">
+            <a href="#" class="btn waves-effect waves-green btn-flat modal-action modal-close">Cerrar</a>
+        </div>
+    </div>*@
 
 
     <div class="row">
@@ -257,12 +265,14 @@
             <i class="mdi-content-add-box"></i>
         </a>
     </div>
-
+   
     
 </main>
 
 @section scripts{
+    <script src="~/js/componentes/transferirCaja.js"></script>
     <script>
+    
         function Mostrar(cajaId, CajaName) {
             $.get('@Url.Action("ContarUsuariosCajaAsignar", "Cajadiario")', function (r) {
                 if (r > 0) {
@@ -331,9 +341,7 @@
             }).catch(swal.noop)
         }
 
-        Vue.component('demo', {
-            template:"<p>Hola Mundo</p>"
-        });
+        
 
         var vm = new Vue({
             el: 'main',
@@ -358,11 +366,11 @@
             },
             methods: {
                 AbrirModalMovs: function (cajaDiarioId, caja) {
-                    this.tituloModalMov = "Movimientos " + caja + " Diario #" + cajaDiarioId;                    
+                    this.tituloModalMov = "Movimientos " + caja + " Diario #" + cajaDiarioId;
 
                     var self = this;
                     $.get('@Url.Action("ListarMovimientos", "Cajadiario")', { id: cajaDiarioId }, function (d) {
-                        self.movimientos = d;                        
+                        self.movimientos = d;
                     });
 
                     $("#modalMovs").openModal();
@@ -372,7 +380,11 @@
                     $.post('@Url.Action("TranferenciaBovedaBanco", "Cajadiario")', { monto: result[0], indEntrada: indEntrada }, function (d) {
                         self.boveda = d;
                         fn.mensaje("La tranferencia se realizo con éxito");
-                    }); 
+                    });
+                },
+                AbrirTransferirCaja: function () {
+                    var self = this;
+                    $("#modalTransferenciaCaja").openModal();
                 }
             },
             computed: {

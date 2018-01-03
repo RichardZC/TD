@@ -183,6 +183,7 @@
     <Content Include="images\user-bg.jpg" />
     <Content Include="images\user-profile-bg.jpg" />
     <Content Include="js\app.js" />
+    <Content Include="js\componentes\transferirCaja.js" />
     <Content Include="js\custom-script.js" />
     <Content Include="js\ini.js" />
     <Content Include="js\jquery.autocomplete.min.js" />
@@ -367,6 +368,7 @@
     <Content Include="Views\Diario\Index.cshtml" />
     <Content Include="Views\Bandeja\Index.cshtml" />
     <Content Include="Views\Bandeja\Mantener.cshtml" />
+    <Content Include="Views\Home\_Modal.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
